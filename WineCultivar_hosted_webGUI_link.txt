@@ -23,7 +23,7 @@ Features Used (6 selected):
 
 Deployment Information:
 -----------------------
-Live URL: [TO BE UPDATED AFTER DEPLOYMENT]
-GitHub Repository: [TO BE UPDATED]
+Live URL: https://winecultivarprediction.onrender.com
+GitHub Repository: https://github.com/Adesmith001/WineCultivarPrediction
 
 ============================================================
