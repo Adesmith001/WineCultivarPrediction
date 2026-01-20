@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wine Cultivar Origin Prediction | CSC415 Project</title>
+    <meta
+      name="description"
+      content="Predict wine cultivar origin using machine learning. CSC415 Holiday Assignment by SOMADE TOLUWANI (22CH032062)."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Hero Section -->
+      <header class="hero">
+        <div class="hero-badge">Machine Learning</div>
+        <h1 class="hero-title">Wine Origin</h1>
+        <p class="hero-subtitle">
+          Identify the cultivar of Italian wines through chemical analysis.
+          <br />Precision meets simplicity.
+        </p>
+      </header>
+
+      <!-- Main Card -->
+      <main class="card">
+        <div class="card-header">
+          <h2 class="card-title">Chemical Composition</h2>
+          <p class="card-subtitle">
+            Enter the wine's chemical analysis measurements (6 key features)
+          </p>
+        </div>
+
+        <form id="predictionForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="alcohol">Alcohol %</label>
+              <input
+                type="number"
+                id="alcohol"
+                name="alcohol"
+                step="0.01"
+                min="10"
+                max="15"
+                placeholder="13.2"
+                required
+              />
+              <span class="input-hint">Range: 10-15%</span>
+            </div>
+
+            <div class="form-group">
+              <label for="malic_acid">Malic Acid</label>
+              <input
+                type="number"
+                id="malic_acid"
+                name="malic_acid"
+                step="0.01"
+                min="0.5"
+                max="6"
+                placeholder="2.3"
+                required
+              />
+              <span class="input-hint">Range: 0.5-6 g/L</span>
+            </div>
+
+            <div class="form-group">
+              <label for="flavanoids">Flavanoids</label>
+              <input
+                type="number"
+                id="flavanoids"
+                name="flavanoids"
+                step="0.01"
+                min="0"
+                max="6"
+                placeholder="2.5"
+                required
+              />
+              <span class="input-hint">Range: 0-6</span>
+            </div>
+
+            <div class="form-group">
+              <label for="color_intensity">Color Intensity</label>
+              <input
+                type="number"
+                id="color_intensity"
+                name="color_intensity"
+                step="0.01"
+                min="1"
+                max="13"
+                placeholder="5.1"
+                required
+              />
+              <span class="input-hint">Range: 1-13</span>
+            </div>
+
+            <div class="form-group">
+              <label for="hue">Hue</label>
+              <input
+                type="number"
+                id="hue"
+                name="hue"
+                step="0.01"
+                min="0.4"
+                max="1.8"
+                placeholder="1.0"
+                required
+              />
+              <span class="input-hint">Range: 0.4-1.8</span>
+            </div>
+
+            <div class="form-group">
+              <label for="proline">Proline</label>
+              <input
+                type="number"
+                id="proline"
+                name="proline"
+                step="1"
+                min="200"
+                max="1700"
+                placeholder="750"
+                required
+              />
+              <span class="input-hint">Range: 200-1700 mg/L</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary" id="predictBtn">
+            <span class="btn-text">Classify Wine Origin</span>
+            <span class="btn-icon">→</span>
+          </button>
+        </form>
+
+        <!-- Loading State -->
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p class="loading-text">Analyzing composition...</p>
+        </div>
+
+        <!-- Result Section -->
+        <div class="result-section" id="resultSection">
+          <div class="result-badge" id="resultBadge">Predicted Origin</div>
+          <h3 class="result-title" id="cultivarName">Cultivar 1</h3>
+          <p class="result-description" id="resultDesc">
+            Premium grape variety from the Piedmont region.
+          </p>
+
+          <div class="confidence-wrapper">
+            <div class="confidence-bar">
+              <div class="confidence-fill" id="confidenceFill"></div>
+            </div>
+            <p class="confidence-text" id="confidenceText">Confidence: 0%</p>
+          </div>
+
+          <div class="probabilities" id="probabilities">
+            <div class="prob-item">
+              <span class="prob-label">Cultivar 1</span>
+              <div class="prob-bar">
+                <div class="prob-fill" id="prob1"></div>
+              </div>
+              <span class="prob-value" id="probVal1">0%</span>
+            </div>
+            <div class="prob-item">
+              <span class="prob-label">Cultivar 2</span>
+              <div class="prob-bar">
+                <div class="prob-fill" id="prob2"></div>
+              </div>
+              <span class="prob-value" id="probVal2">0%</span>
+            </div>
+            <div class="prob-item">
+              <span class="prob-label">Cultivar 3</span>
+              <div class="prob-bar">
+                <div class="prob-fill" id="prob3"></div>
+              </div>
+              <span class="prob-value" id="probVal3">0%</span>
+            </div>
+          </div>
+
+          <button type="button" class="btn-secondary" id="resetBtn">
+            Make Another Prediction
+          </button>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage"></div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <p>Wine Cultivar Origin Prediction System</p>
+        <p class="footer-meta">
+          CSC415 Holiday Assignment · SOMADE TOLUWANI (22CH032062)
+        </p>
+        <p class="footer-tech">
+          Algorithm: Random Forest Classifier · Model Persistence: Joblib
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      const form = document.getElementById("predictionForm");
+      const loading = document.getElementById("loading");
+      const resultSection = document.getElementById("resultSection");
+      const errorMessage = document.getElementById("errorMessage");
+      const predictBtn = document.getElementById("predictBtn");
+      const resetBtn = document.getElementById("resetBtn");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        // Reset state
+        resultSection.classList.remove("show");
+        errorMessage.classList.remove("show");
+        loading.classList.add("show");
+        predictBtn.disabled = true;
+
+        const data = {
+          alcohol: parseFloat(document.getElementById("alcohol").value),
+          malic_acid: parseFloat(document.getElementById("malic_acid").value),
+          flavanoids: parseFloat(document.getElementById("flavanoids").value),
+          color_intensity: parseFloat(
+            document.getElementById("color_intensity").value,
+          ),
+          hue: parseFloat(document.getElementById("hue").value),
+          proline: parseFloat(document.getElementById("proline").value),
+        };
+
+        try {
+          const response = await fetch("/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            loading.classList.remove("show");
+            resultSection.classList.add("show");
+
+            const confidence = (result.confidence * 100).toFixed(1);
+
+            document.getElementById("cultivarName").textContent =
+              result.cultivar_name;
+            document.getElementById("resultDesc").textContent =
+              result.description;
+            document.getElementById("confidenceFill").style.width =
+              confidence + "%";
+            document.getElementById(
+              "confidenceText",
+            ).textContent = `Confidence: ${confidence}%`;
+
+            // Update probability bars
+            const probs = result.probabilities;
+            document.getElementById("prob1").style.width =
+              probs["Cultivar 1"] * 100 + "%";
+            document.getElementById("prob2").style.width =
+              probs["Cultivar 2"] * 100 + "%";
+            document.getElementById("prob3").style.width =
+              probs["Cultivar 3"] * 100 + "%";
+            document.getElementById("probVal1").textContent =
+              (probs["Cultivar 1"] * 100).toFixed(1) + "%";
+            document.getElementById("probVal2").textContent =
+              (probs["Cultivar 2"] * 100).toFixed(1) + "%";
+            document.getElementById("probVal3").textContent =
+              (probs["Cultivar 3"] * 100).toFixed(1) + "%";
+          } else {
+            throw new Error(result.error || "Classification failed");
+          }
+        } catch (error) {
+          loading.classList.remove("show");
+          errorMessage.textContent = error.message;
+          errorMessage.classList.add("show");
+        } finally {
+          predictBtn.disabled = false;
+        }
+      });
+
+      resetBtn.addEventListener("click", () => {
+        resultSection.classList.remove("show");
+        form.reset();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    </script>
+  </body>
+</html>

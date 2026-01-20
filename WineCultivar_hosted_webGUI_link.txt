@@ -1,0 +1,29 @@
+============================================================
+WINE CULTIVAR ORIGIN PREDICTION SYSTEM
+CSC415 Holiday Assignment - Project 6
+============================================================
+
+Student Information:
+--------------------
+Name: SOMADE TOLUWANI
+Matric Number: 22CH032062
+
+Technical Details:
+------------------
+Machine Learning Algorithm: Random Forest Classifier
+Model Persistence Method: Joblib (.pkl format)
+Web Framework: Flask
+Features Used (6 selected): 
+  1. alcohol
+  2. malic_acid
+  3. flavanoids
+  4. color_intensity
+  5. hue
+  6. proline
+
+Deployment Information:
+-----------------------
+Live URL: [TO BE UPDATED AFTER DEPLOYMENT]
+GitHub Repository: [TO BE UPDATED]
+
+============================================================
